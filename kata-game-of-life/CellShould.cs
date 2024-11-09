@@ -42,6 +42,18 @@ public class CellShould
             error => error.Should().BeNull(),
             cell => cell.Should().Be(Cell.CrateDead()));
     }
+    
+    [Theory]
+    [InlineData(2)]
+    [InlineData(3)]
+    public void Survive(int neighbours)
+    {
+        var aliveCell = Cell.CrateAlive();
+
+        aliveCell.NextGeneration(neighbours).Match(
+            error => error.Should().BeNull(),
+            cell => cell.Should().Be(Cell.CrateAlive()));
+    }
 }
 
 public record ErrorMessage(string Message);
