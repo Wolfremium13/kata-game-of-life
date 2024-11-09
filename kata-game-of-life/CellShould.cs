@@ -27,18 +27,27 @@ public record ErrorMessage(string Message);
 
 public record Cell
 {
+    private readonly bool _isDead;
+
+    private Cell(bool isDead)
+    {
+        _isDead = isDead;
+    }
+
     public static Cell CrateDead()
     {
-        throw new NotImplementedException();
+        bool isDead = false;
+        return new Cell(isDead);
     }
 
     public Either<ErrorMessage, Cell> NextGeneration(int neighbours)
     {
-        throw new NotImplementedException();
+        return CrateAlive();
     }
 
     public static Cell CrateAlive()
     {
-        throw new NotImplementedException();
+        bool isDead = true;
+        return new Cell(isDead);
     }
 }
