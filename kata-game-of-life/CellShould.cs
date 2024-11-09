@@ -36,8 +36,7 @@ public record Cell
 
     public static Cell CrateDead()
     {
-        bool isDead = false;
-        return new Cell(isDead);
+        return new Cell(false);
     }
 
     public Either<ErrorMessage, Cell> NextGeneration(int neighbours)
@@ -47,7 +46,6 @@ public record Cell
 
     public static Cell CrateAlive()
     {
-        bool isDead = true;
-        return new Cell(isDead);
+        return new Cell(true);
     }
 }
