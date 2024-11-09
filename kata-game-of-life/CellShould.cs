@@ -63,6 +63,7 @@ public record Cell
     public Either<ErrorMessage, Cell> NextGeneration(int neighbours)
     {
         if (neighbours < 2) return CrateDead();
+        if(neighbours > 3) return CrateDead();
         return CrateAlive();
     }
 
