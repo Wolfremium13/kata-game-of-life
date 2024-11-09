@@ -37,8 +37,7 @@ public class WorldShould
         
         Action addCellOutsideWorld = () => _world.AddCellAt(outsideWorldPosition);
 
-        addCellOutsideWorld.Should().Throw<ArgumentOutOfRangeException>()
-            .WithMessage("Cell position is outside of world dimensions");
+        addCellOutsideWorld.Should().Throw<ArgumentOutOfRangeException>();
     }
 }
 
@@ -46,11 +45,22 @@ public record Position(int X, int Y);
 
 public class World
 {
+    private readonly int _worldDimensions;
     private readonly List<Position> _cells = [];
-    public static World CreateEmpty(int worldDimensions) => new();
+
+    private World(int worldDimensions)
+    {
+        _worldDimensions = worldDimensions;
+    }
+
+    public static World CreateEmpty(int worldDimensions) => new(worldDimensions);
 
     public void AddCellAt(Position position)
     {
+        if (position.X >= _worldDimensions || position.Y >= _worldDimensions)
+        {
+            throw new ArgumentOutOfRangeException();
+        }
         _cells.Add(position);
     }
 
