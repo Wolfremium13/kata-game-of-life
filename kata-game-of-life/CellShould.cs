@@ -55,15 +55,16 @@ public class CellShould
             cell => cell.Should().Be(Cell.CrateAlive()));
     }
 
-    [Fact]
-    public void HandleOutOfRangeNeighbours()
+    [Theory]
+    [InlineData(9)]
+    [InlineData(-1)]
+    public void HandleOutOfRangeNeighbours(int outOfRangeNeighbours)
     {
-        const int maxNeighbours = 8;
         var aliveCell = Cell.CrateAlive();
 
-        aliveCell.NextGeneration(maxNeighbours + 1)
+        aliveCell.NextGeneration(outOfRangeNeighbours)
             .Match(error => error.Should().BeOfType<OutOfRangeNeighbours>()
-                    .Which.Message.Should().Be("The maximum number of neighbours is 8"),
+                    .Which.Message.Should().Be($"The number of neighbours is out of range: {outOfRangeNeighbours}"),
             cell => cell.Should().BeNull());
     }
 }
@@ -88,7 +89,8 @@ public record Cell
 
     public Either<ErrorMessage, Cell> NextGeneration(int neighbours)
     {
-        if(neighbours > 8) return new OutOfRangeNeighbours("The maximum number of neighbours is 8");
+        if(neighbours > 8 || neighbours < 0)
+            return new OutOfRangeNeighbours($"The number of neighbours is out of range: {neighbours}");
         if (neighbours < 2) return CrateDead();
         if (neighbours > 3) return CrateDead();
         return CrateAlive();
