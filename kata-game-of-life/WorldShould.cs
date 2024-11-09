@@ -5,11 +5,11 @@ namespace kata_game_of_life;
 public class WorldShould
 {
     private readonly World _world;
+
     public WorldShould()
     {
         var worldDimensions = 3;
         _world = World.CreateEmpty(worldDimensions);
-        
     }
 
     [Fact]
@@ -29,15 +29,26 @@ public class WorldShould
 
         _world.IsCellAliveAt(positionWithoutCell).Should().BeFalse();
     }
-    
+
     [Fact]
     public void not_allow_to_add_cells_outside_of_world_dimensions()
     {
         var outsideWorldPosition = new Position(8, 8);
-        
+
         Action addCellOutsideWorld = () => _world.AddCellAt(outsideWorldPosition);
 
         addCellOutsideWorld.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [Fact]
+    public void any_live_cell_with_fewer_than_two_live_neighbours_dies()
+    {
+        var position = new Position(1, 1);
+        _world.AddCellAt(position);
+
+        _world.Tick();
+
+        _world.IsCellAliveAt(position).Should().BeFalse();
     }
 }
 
@@ -61,9 +72,14 @@ public class World
         {
             throw new ArgumentOutOfRangeException();
         }
+
         _cells.Add(position);
     }
 
     public bool IsCellAliveAt(Position position) =>
         _cells.Contains(position);
+
+    public void Tick()
+    {
+    }
 }
