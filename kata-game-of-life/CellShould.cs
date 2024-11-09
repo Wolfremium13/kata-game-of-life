@@ -31,6 +31,17 @@ public class CellShould
             error => error.Should().BeNull(),
             cell => cell.Should().Be(Cell.CrateDead()));
     }
+    
+    [Fact]
+    public void DieByOverpopulation()
+    {
+        var neighbours = 4;
+        var aliveCell = Cell.CrateAlive();
+
+        aliveCell.NextGeneration(neighbours).Match(
+            error => error.Should().BeNull(),
+            cell => cell.Should().Be(Cell.CrateDead()));
+    }
 }
 
 public record ErrorMessage(string Message);
