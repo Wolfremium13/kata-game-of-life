@@ -15,11 +15,21 @@ public class CellShould
     {
         var neighbours = 3;
         var deadCell = Cell.CrateDead();
-        
+
         deadCell.NextGeneration(neighbours).Match(
             error => error.Should().BeNull(),
             cell => cell.Should().Be(Cell.CrateAlive()));
+    }
 
+    [Fact]
+    public void DieByUnderpopulation()
+    {
+        var neighbours = 1;
+        var aliveCell = Cell.CrateAlive();
+
+        aliveCell.NextGeneration(neighbours).Match(
+            error => error.Should().BeNull(),
+            cell => cell.Should().Be(Cell.CrateDead()));
     }
 }
 
