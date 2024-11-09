@@ -23,11 +23,11 @@ public class WorldShould
     }
 
     [Fact]
-    public void cell_not_alive_in_current_position()
+    public void cells_are_not_alive_by_default()
     {
-        var position = new Position(1, 1);
+        var positionWithoutCell = new Position(1, 1);
 
-        _world.IsCellAliveAt(position).Should().BeFalse();
+        _world.IsCellAliveAt(positionWithoutCell).Should().BeFalse();
     }
 }
 
