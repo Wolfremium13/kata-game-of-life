@@ -15,6 +15,16 @@ public class WorldShould
 
         world.IsCellAliveAt(position).Should().BeTrue();
     }
+
+    [Fact]
+    public void cell_not_alive_in_current_position()
+    {
+        var position = new Position(1, 1);
+        var worldDimensions = 3;
+        
+        var world = World.CreateEmpty(worldDimensions);
+        world.IsCellAliveAt(position).Should().BeFalse();
+    }
 }
 
 public record Position
