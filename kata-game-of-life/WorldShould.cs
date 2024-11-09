@@ -10,7 +10,7 @@ public class WorldShould
         var worldDimensions = 3;
         var world = World.CreateEmpty(worldDimensions);
         var position = new Position(1, 1);
-        
+
         world.AddCellAt(position);
 
         world.IsCellAliveAt(position).Should().BeTrue();
@@ -21,26 +21,24 @@ public class WorldShould
     {
         var position = new Position(1, 1);
         var worldDimensions = 3;
-        
+
         var world = World.CreateEmpty(worldDimensions);
         world.IsCellAliveAt(position).Should().BeFalse();
     }
 }
 
-public record Position
-{
-    public Position(int x, int y)
-    {
-    }
-}
+public record Position(int X, int Y);
 
 public class World
 {
+    private readonly List<Position> _cells = [];
     public static World CreateEmpty(int worldDimensions) => new();
 
     public void AddCellAt(Position position)
     {
+        _cells.Add(position);
     }
 
-    public bool IsCellAliveAt(Position position) => true;
+    public bool IsCellAliveAt(Position position) =>
+        _cells.Contains(position);
 }
