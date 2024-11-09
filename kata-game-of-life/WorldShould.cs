@@ -81,5 +81,6 @@ public class World
 
     public void Tick()
     {
+        _cells.Clear();
     }
 }
