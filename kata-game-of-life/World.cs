@@ -31,7 +31,7 @@ public class World
         foreach (var cell in _aliveCells)
         {
             var neighbours = GetNeighbours(cell);
-            var aliveNeighbours = neighbours.Count(neighbour => IsCellAliveAt(neighbour));
+            var aliveNeighbours = neighbours.Count(IsCellAliveAt);
             if (aliveNeighbours < 2)
             {
                 continue;
