@@ -3,7 +3,7 @@ namespace kata_game_of_life;
 public class World
 {
     private readonly int _worldDimensions;
-    private readonly List<Position> _aliveCells = [];
+    private readonly List<Position> _currentGenerationAliveCells = [];
 
     private World(int worldDimensions)
     {
@@ -19,25 +19,24 @@ public class World
             throw new ArgumentOutOfRangeException();
         }
 
-        _aliveCells.Add(position);
+        _currentGenerationAliveCells.Add(position);
     }
 
     public bool IsCellAliveAt(Position position) =>
-        _aliveCells.Contains(position);
+        _currentGenerationAliveCells.Contains(position);
 
     public void Tick()
     {
         var nextGenerationAliveCells = new List<Position>();
-        foreach (var cell in _aliveCells)
+        foreach (var cell in _currentGenerationAliveCells)
         {
             var neighbours = GetNeighbours(cell);
             var aliveNeighbours = neighbours.Count(IsCellAliveAt);
             if (aliveNeighbours is 2 or 3)
                 nextGenerationAliveCells.Add(cell);
         }
-
-        _aliveCells.Clear();
-        _aliveCells.AddRange(nextGenerationAliveCells);
+        _currentGenerationAliveCells.Clear();
+        _currentGenerationAliveCells.AddRange(nextGenerationAliveCells);
     }
 
     private static IEnumerable<Position> GetNeighbours(Position position)
