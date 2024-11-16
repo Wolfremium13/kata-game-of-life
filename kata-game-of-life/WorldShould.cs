@@ -78,4 +78,17 @@ public class WorldShould
 
         _world.IsCellAliveAt(position).Should().BeFalse();
     }
+    
+    [Fact]
+    public void any_dead_cell_with_exactly_three_live_neighbours_becomes_a_live_cell()
+    {
+        var position = new Position(1, 1);
+        _world.AddCellAt(new Position(0, 0));
+        _world.AddCellAt(new Position(0, 1));
+        _world.AddCellAt(new Position(0, 2));
+
+        _world.Tick();
+
+        _world.IsCellAliveAt(position).Should().BeTrue();
+    }
 }
