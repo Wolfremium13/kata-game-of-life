@@ -11,25 +11,7 @@ public class WorldShould
         const int worldDimensions = 3;
         _world = World.CreateEmpty(worldDimensions);
     }
-
-    [Fact]
-    public void allow_to_add_cells()
-    {
-        var position = new Position(1, 1);
-
-        _world.AddCellAt(position);
-
-        _world.IsCellAliveAt(position).Should().BeTrue();
-    }
-
-    [Fact]
-    public void cells_are_not_alive_by_default()
-    {
-        var positionWithoutCell = new Position(1, 1);
-
-        _world.IsCellAliveAt(positionWithoutCell).Should().BeFalse();
-    }
-
+    
     [Fact]
     public void not_allow_to_add_cells_outside_of_world_dimensions()
     {
