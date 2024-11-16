@@ -50,4 +50,17 @@ public class WorldShould
 
         _world.IsCellAliveAt(position).Should().BeFalse();
     }
+    
+    [Fact]
+    public void any_live_cell_with_tw_oor_three_live_neighbours_lives_on_to_the_next_generation()
+    {
+        var position = new Position(1, 1);
+        _world.AddCellAt(position);
+        _world.AddCellAt(new Position(0, 0));
+        _world.AddCellAt(new Position(0, 1));
+
+        _world.Tick();
+
+        _world.IsCellAliveAt(position).Should().BeTrue();
+    }
 }
