@@ -63,4 +63,19 @@ public class WorldShould
 
         _world.IsCellAliveAt(position).Should().BeTrue();
     }
+    
+    [Fact]
+    public void any_live_cell_with_more_than_three_live_neighbours_dies()
+    {
+        var position = new Position(1, 1);
+        _world.AddCellAt(position);
+        _world.AddCellAt(new Position(0, 0));
+        _world.AddCellAt(new Position(0, 1));
+        _world.AddCellAt(new Position(0, 2));
+        _world.AddCellAt(new Position(1, 0));
+
+        _world.Tick();
+
+        _world.IsCellAliveAt(position).Should().BeFalse();
+    }
 }
