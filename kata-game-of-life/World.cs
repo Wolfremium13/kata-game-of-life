@@ -32,17 +32,8 @@ public class World
         {
             var neighbours = GetNeighbours(cell);
             var aliveNeighbours = neighbours.Count(IsCellAliveAt);
-            if (aliveNeighbours < 2)
-            {
-                continue;
-            }
-            
-            if (aliveNeighbours > 3)
-            {
-                continue;
-            }
-
-            nextGenerationAliveCells.Add(cell);
+            if (aliveNeighbours is 2 or 3)
+                nextGenerationAliveCells.Add(cell);
         }
 
         _aliveCells.Clear();
