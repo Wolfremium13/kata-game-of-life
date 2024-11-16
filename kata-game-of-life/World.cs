@@ -30,7 +30,7 @@ public class World
         var nextGenerationAliveCells2 = new List<Cell>();
         foreach (var aliveCell in _currentGenerationAliveCells2)
         {
-            var neighbours = GetNeighbours(aliveCell.Position);
+            var neighbours = Cell.GetNeighbours(aliveCell.Position);
             var aliveNeighbours = neighbours.Count(IsCellAliveAt);
             if (aliveNeighbours is 2 or 3)
             {
@@ -42,7 +42,7 @@ public class World
                 if (IsCellAliveAt(neighbour))
                     continue;
 
-                var aliveNeighboursOfNeighbour = GetNeighbours(neighbour).Count(IsCellAliveAt);
+                var aliveNeighboursOfNeighbour = Cell.GetNeighbours(neighbour).Count(IsCellAliveAt);
                 if (aliveNeighboursOfNeighbour is 3)
                 {
                     nextGenerationAliveCells2.Add(Cell.Create(neighbour));
@@ -53,8 +53,13 @@ public class World
         _currentGenerationAliveCells2.Clear();
         _currentGenerationAliveCells2.AddRange(nextGenerationAliveCells2);
     }
+}
 
-    private static IEnumerable<Position> GetNeighbours(Position position)
+public record Cell(Position Position)
+{
+    public static Cell Create(Position position) => new(position);
+
+    public static IEnumerable<Position> GetNeighbours(Position position)
     {
         yield return new Position(position.X - 1, position.Y - 1);
         yield return position with { X = position.X - 1 };
@@ -65,9 +70,4 @@ public class World
         yield return position with { X = position.X + 1 };
         yield return new Position(position.X + 1, position.Y + 1);
     }
-}
-
-public record Cell(Position Position)
-{
-    public static Cell Create(Position position) => new(position);
 }
