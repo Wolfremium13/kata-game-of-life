@@ -3,7 +3,7 @@ namespace kata_game_of_life;
 public class World
 {
     private readonly int _worldDimensions;
-    private readonly List<Cell> _currentGenerationAliveCells2 = new();
+    private readonly List<Cell> _currentGenerationAliveCells2 = [];
 
     private World(int worldDimensions)
     {
