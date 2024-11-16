@@ -4,6 +4,7 @@ public class World
 {
     private readonly int _worldDimensions;
     private readonly List<Position> _currentGenerationAliveCells = [];
+    private readonly List<Cell> _currentGenerationAliveCells2 = new();
 
     private World(int worldDimensions)
     {
@@ -20,6 +21,7 @@ public class World
         }
 
         _currentGenerationAliveCells.Add(position);
+        _currentGenerationAliveCells2.Add(Cell.Create(position));
     }
 
     public bool IsCellAliveAt(Position position) =>
@@ -60,4 +62,9 @@ public class World
         yield return position with { X = position.X + 1 };
         yield return new Position(position.X + 1, position.Y + 1);
     }
+}
+
+public record Cell(Position Position)
+{
+    public static Cell Create(Position position) => new(position);
 }
