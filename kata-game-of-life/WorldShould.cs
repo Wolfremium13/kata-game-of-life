@@ -8,7 +8,7 @@ public class WorldShould
 
     public WorldShould()
     {
-        var worldDimensions = 3;
+        const int worldDimensions = 3;
         _world = World.CreateEmpty(worldDimensions);
     }
 
@@ -35,7 +35,7 @@ public class WorldShould
     {
         var outsideWorldPosition = new Position(8, 8);
 
-        Action addCellOutsideWorld = () => _world.AddCellAt(outsideWorldPosition);
+        var addCellOutsideWorld = () => _world.AddCellAt(outsideWorldPosition);
 
         addCellOutsideWorld.Should().Throw<ArgumentOutOfRangeException>();
     }
