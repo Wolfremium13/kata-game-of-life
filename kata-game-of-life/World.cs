@@ -25,17 +25,22 @@ public class World
     }
 
     public bool IsCellAliveAt(Position position) =>
-        _currentGenerationAliveCells.Contains(position);
+        _currentGenerationAliveCells.Contains(position) || _currentGenerationAliveCells2.Any(cell => cell.Position == position);
 
     public void Tick()
     {
         var nextGenerationAliveCells = new List<Position>();
+        var nextGenerationAliveCells2 = new List<Cell>();
         foreach (var cell in _currentGenerationAliveCells)
         {
             var neighbours = GetNeighbours(cell);
             var aliveNeighbours = neighbours.Count(IsCellAliveAt);
             if (aliveNeighbours is 2 or 3)
+            {
                 nextGenerationAliveCells.Add(cell);
+                nextGenerationAliveCells2.Add(Cell.Create(cell));
+            }
+
             foreach (var neighbour in neighbours)
             {
                 if (IsCellAliveAt(neighbour))
@@ -43,12 +48,17 @@ public class World
 
                 var aliveNeighboursOfNeighbour = GetNeighbours(neighbour).Count(IsCellAliveAt);
                 if (aliveNeighboursOfNeighbour is 3)
+                {
                     nextGenerationAliveCells.Add(neighbour);
+                    nextGenerationAliveCells2.Add(Cell.Create(neighbour));
+                }
             }
         }
 
+        _currentGenerationAliveCells2.Clear();
         _currentGenerationAliveCells.Clear();
         _currentGenerationAliveCells.AddRange(nextGenerationAliveCells);
+        _currentGenerationAliveCells2.AddRange(nextGenerationAliveCells2);
     }
 
     private static IEnumerable<Position> GetNeighbours(Position position)
