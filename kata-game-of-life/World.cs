@@ -3,7 +3,7 @@ namespace kata_game_of_life;
 public class World
 {
     private readonly int _worldDimensions;
-    private readonly List<Position> _cells = [];
+    private readonly List<Position> _aliveCells = [];
 
     private World(int worldDimensions)
     {
@@ -19,14 +19,40 @@ public class World
             throw new ArgumentOutOfRangeException();
         }
 
-        _cells.Add(position);
+        _aliveCells.Add(position);
     }
 
     public bool IsCellAliveAt(Position position) =>
-        _cells.Contains(position);
+        _aliveCells.Contains(position);
 
     public void Tick()
     {
-        _cells.Clear();
+        var nextGenerationAliveCells = new List<Position>();
+        foreach (var cell in _aliveCells)
+        {
+            var neighbours = GetNeighbours(cell);
+            var aliveNeighbours = neighbours.Count(neighbour => IsCellAliveAt(neighbour));
+            if (aliveNeighbours < 2)
+            {
+                continue;
+            }
+
+            nextGenerationAliveCells.Add(cell);
+        }
+
+        _aliveCells.Clear();
+        _aliveCells.AddRange(nextGenerationAliveCells);
+    }
+
+    private static IEnumerable<Position> GetNeighbours(Position position)
+    {
+        yield return new Position(position.X - 1, position.Y - 1);
+        yield return position with { X = position.X - 1 };
+        yield return new Position(position.X - 1, position.Y + 1);
+        yield return position with { Y = position.Y - 1 };
+        yield return position with { Y = position.Y + 1 };
+        yield return new Position(position.X + 1, position.Y - 1);
+        yield return position with { X = position.X + 1 };
+        yield return new Position(position.X + 1, position.Y + 1);
     }
 }
