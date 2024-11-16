@@ -3,7 +3,7 @@ namespace kata_game_of_life;
 public class World
 {
     private readonly int _worldDimensions;
-    private readonly List<Cell> _currentGenerationAliveCells2 = [];
+    private readonly List<Cell> _aliveCells = [];
 
     private World(int worldDimensions)
     {
@@ -19,39 +19,38 @@ public class World
             throw new ArgumentOutOfRangeException();
         }
 
-        _currentGenerationAliveCells2.Add(Cell.Create(position));
+        _aliveCells.Add(Cell.Create(position));
     }
 
     public bool IsCellAliveAt(Position position) =>
-        _currentGenerationAliveCells2.Any(cell => cell.Position == position);
+        _aliveCells.Any(cell => cell.Position == position);
 
     public void Tick()
     {
-        var nextGenerationAliveCells2 = new List<Cell>();
-        foreach (var aliveCell in _currentGenerationAliveCells2)
+        var nextGenerationAliveCells = new List<Cell>();
+        foreach (var aliveCell in _aliveCells)
         {
             var neighbours = aliveCell.GetNeighbours();
-            var aliveNeighbours = neighbours.Count(IsCellAliveAt);
-            if (aliveNeighbours is 2 or 3)
+            if (aliveCell.GetAliveNeighbours(_aliveCells).Count() is 2 or 3)
             {
-                nextGenerationAliveCells2.Add(Cell.Create(aliveCell.Position));
+                nextGenerationAliveCells.Add(aliveCell);
             }
 
             foreach (var neighbour in neighbours)
             {
-                if (IsCellAliveAt(neighbour))
+                if (IsCellAliveAt(neighbour.Position))
                     continue;
 
-                var aliveNeighboursOfNeighbour = Cell.Create(neighbour).GetNeighbours().Count(IsCellAliveAt);
+                var aliveNeighboursOfNeighbour = neighbour.GetAliveNeighbours(_aliveCells).Count();
                 if (aliveNeighboursOfNeighbour is 3)
                 {
-                    nextGenerationAliveCells2.Add(Cell.Create(neighbour));
+                    nextGenerationAliveCells.Add(neighbour);
                 }
             }
         }
 
-        _currentGenerationAliveCells2.Clear();
-        _currentGenerationAliveCells2.AddRange(nextGenerationAliveCells2);
+        _aliveCells.Clear();
+        _aliveCells.AddRange(nextGenerationAliveCells);
     }
 }
 
@@ -59,15 +58,21 @@ public record Cell(Position Position)
 {
     public static Cell Create(Position position) => new(position);
 
-    public IEnumerable<Position> GetNeighbours()
+    public IEnumerable<Cell> GetAliveNeighbours(IEnumerable<Cell> aliveCells)
     {
-        yield return new Position(Position.X - 1, Position.Y - 1);
-        yield return Position with { X = Position.X - 1 };
-        yield return new Position(Position.X - 1, Position.Y + 1);
-        yield return Position with { Y = Position.Y - 1 };
-        yield return Position with { Y = Position.Y + 1 };
-        yield return new Position(Position.X + 1, Position.Y - 1);
-        yield return Position with { X = Position.X + 1 };
-        yield return new Position(Position.X + 1, Position.Y + 1);
+        return GetNeighbours()
+            .Where(neighbour => aliveCells.Any(cell => cell.Position == neighbour.Position));
+    }
+
+    public IEnumerable<Cell> GetNeighbours()
+    {
+        yield return Create(new Position(Position.X - 1, Position.Y - 1));
+        yield return Create(Position with { X = Position.X - 1 });
+        yield return Create(new Position(Position.X - 1, Position.Y + 1));
+        yield return Create(Position with { Y = Position.Y - 1 });
+        yield return Create(Position with { Y = Position.Y + 1 });
+        yield return Create(new Position(Position.X + 1, Position.Y - 1));
+        yield return Create(Position with { X = Position.X + 1 });
+        yield return Create(new Position(Position.X + 1, Position.Y + 1));
     }
 }
