@@ -30,7 +30,7 @@ public class World
         var nextGenerationAliveCells2 = new List<Cell>();
         foreach (var aliveCell in _currentGenerationAliveCells2)
         {
-            var neighbours = Cell.GetNeighbours(aliveCell.Position);
+            var neighbours = aliveCell.GetNeighbours();
             var aliveNeighbours = neighbours.Count(IsCellAliveAt);
             if (aliveNeighbours is 2 or 3)
             {
@@ -42,7 +42,7 @@ public class World
                 if (IsCellAliveAt(neighbour))
                     continue;
 
-                var aliveNeighboursOfNeighbour = Cell.GetNeighbours(neighbour).Count(IsCellAliveAt);
+                var aliveNeighboursOfNeighbour = Cell.Create(neighbour).GetNeighbours().Count(IsCellAliveAt);
                 if (aliveNeighboursOfNeighbour is 3)
                 {
                     nextGenerationAliveCells2.Add(Cell.Create(neighbour));
@@ -59,15 +59,15 @@ public record Cell(Position Position)
 {
     public static Cell Create(Position position) => new(position);
 
-    public static IEnumerable<Position> GetNeighbours(Position position)
+    public IEnumerable<Position> GetNeighbours()
     {
-        yield return new Position(position.X - 1, position.Y - 1);
-        yield return position with { X = position.X - 1 };
-        yield return new Position(position.X - 1, position.Y + 1);
-        yield return position with { Y = position.Y - 1 };
-        yield return position with { Y = position.Y + 1 };
-        yield return new Position(position.X + 1, position.Y - 1);
-        yield return position with { X = position.X + 1 };
-        yield return new Position(position.X + 1, position.Y + 1);
+        yield return new Position(Position.X - 1, Position.Y - 1);
+        yield return Position with { X = Position.X - 1 };
+        yield return new Position(Position.X - 1, Position.Y + 1);
+        yield return Position with { Y = Position.Y - 1 };
+        yield return Position with { Y = Position.Y + 1 };
+        yield return new Position(Position.X + 1, Position.Y - 1);
+        yield return Position with { X = Position.X + 1 };
+        yield return new Position(Position.X + 1, Position.Y + 1);
     }
 }
