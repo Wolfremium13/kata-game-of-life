@@ -34,7 +34,17 @@ public class World
             var aliveNeighbours = neighbours.Count(IsCellAliveAt);
             if (aliveNeighbours is 2 or 3)
                 nextGenerationAliveCells.Add(cell);
+            foreach (var neighbour in neighbours)
+            {
+                if (IsCellAliveAt(neighbour))
+                    continue;
+
+                var aliveNeighboursOfNeighbour = GetNeighbours(neighbour).Count(IsCellAliveAt);
+                if (aliveNeighboursOfNeighbour is 3)
+                    nextGenerationAliveCells.Add(neighbour);
+            }
         }
+
         _currentGenerationAliveCells.Clear();
         _currentGenerationAliveCells.AddRange(nextGenerationAliveCells);
     }
