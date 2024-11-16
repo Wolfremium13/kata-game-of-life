@@ -36,6 +36,11 @@ public class World
             {
                 continue;
             }
+            
+            if (aliveNeighbours > 3)
+            {
+                continue;
+            }
 
             nextGenerationAliveCells.Add(cell);
         }
