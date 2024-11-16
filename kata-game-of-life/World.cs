@@ -3,7 +3,6 @@ namespace kata_game_of_life;
 public class World
 {
     private readonly int _worldDimensions;
-    private readonly List<Position> _currentGenerationAliveCells = [];
     private readonly List<Cell> _currentGenerationAliveCells2 = new();
 
     private World(int worldDimensions)
@@ -20,25 +19,22 @@ public class World
             throw new ArgumentOutOfRangeException();
         }
 
-        _currentGenerationAliveCells.Add(position);
         _currentGenerationAliveCells2.Add(Cell.Create(position));
     }
 
     public bool IsCellAliveAt(Position position) =>
-        _currentGenerationAliveCells.Contains(position) || _currentGenerationAliveCells2.Any(cell => cell.Position == position);
+        _currentGenerationAliveCells2.Any(cell => cell.Position == position);
 
     public void Tick()
     {
-        var nextGenerationAliveCells = new List<Position>();
         var nextGenerationAliveCells2 = new List<Cell>();
-        foreach (var cell in _currentGenerationAliveCells)
+        foreach (var aliveCell in _currentGenerationAliveCells2)
         {
-            var neighbours = GetNeighbours(cell);
+            var neighbours = GetNeighbours(aliveCell.Position);
             var aliveNeighbours = neighbours.Count(IsCellAliveAt);
             if (aliveNeighbours is 2 or 3)
             {
-                nextGenerationAliveCells.Add(cell);
-                nextGenerationAliveCells2.Add(Cell.Create(cell));
+                nextGenerationAliveCells2.Add(Cell.Create(aliveCell.Position));
             }
 
             foreach (var neighbour in neighbours)
@@ -49,15 +45,12 @@ public class World
                 var aliveNeighboursOfNeighbour = GetNeighbours(neighbour).Count(IsCellAliveAt);
                 if (aliveNeighboursOfNeighbour is 3)
                 {
-                    nextGenerationAliveCells.Add(neighbour);
                     nextGenerationAliveCells2.Add(Cell.Create(neighbour));
                 }
             }
         }
 
         _currentGenerationAliveCells2.Clear();
-        _currentGenerationAliveCells.Clear();
-        _currentGenerationAliveCells.AddRange(nextGenerationAliveCells);
         _currentGenerationAliveCells2.AddRange(nextGenerationAliveCells2);
     }
 
